@@ -189,6 +189,9 @@ CUSTOM_HOME="$CUSTOM_HOME"
 ENV_FILE="\$CUSTOM_HOME/minimax.env"
 BRIDGE_LOG="\$CUSTOM_HOME/proxy.log"
 BRIDGE_PID="\$CUSTOM_HOME/bridge.pid"
+BRIDGE_LABEL="com.ademisler.$APP_ID.bridge"
+LAUNCH_AGENTS_DIR="$HOME/Library/LaunchAgents"
+BRIDGE_PLIST="\$LAUNCH_AGENTS_DIR/\$BRIDGE_LABEL.plist"
 AUTOMATIONS_LOG="\$CUSTOM_HOME/automations/runner.log"
 AUTOMATIONS_PID="\$CUSTOM_HOME/automations/runner.pid"
 NODE_BIN="$NODE_BIN"
@@ -240,6 +243,67 @@ status_pid_file() {
   fi
 }
 
+launchctl_available() {
+  command -v launchctl >/dev/null 2>&1 && [ "\$(uname -s)" = "Darwin" ]
+}
+
+launchctl_domain() {
+  printf 'gui/%s' "\$(id -u)"
+}
+
+write_bridge_launch_agent() {
+  local launch_command
+  launch_command="set -a; source \"\$ENV_FILE\"; set +a; exec \"\$NODE_BIN\" \"\$CUSTOM_HOME/openai-compatible-responses-bridge.mjs\""
+
+  mkdir -p "\$LAUNCH_AGENTS_DIR"
+  rm -f "\$BRIDGE_PLIST"
+  plutil -create xml1 "\$BRIDGE_PLIST"
+  plutil -insert Label -string "\$BRIDGE_LABEL" "\$BRIDGE_PLIST"
+  plutil -insert ProgramArguments -array "\$BRIDGE_PLIST"
+  plutil -insert ProgramArguments.0 -string "/bin/bash" "\$BRIDGE_PLIST"
+  plutil -insert ProgramArguments.1 -string "-lc" "\$BRIDGE_PLIST"
+  plutil -insert ProgramArguments.2 -string "\$launch_command" "\$BRIDGE_PLIST"
+  plutil -insert WorkingDirectory -string "\$CUSTOM_HOME" "\$BRIDGE_PLIST"
+  plutil -insert StandardOutPath -string "\$BRIDGE_LOG" "\$BRIDGE_PLIST"
+  plutil -insert StandardErrorPath -string "\$BRIDGE_LOG" "\$BRIDGE_PLIST"
+  plutil -insert RunAtLoad -bool false "\$BRIDGE_PLIST"
+  plutil -insert EnvironmentVariables -dictionary "\$BRIDGE_PLIST"
+  plutil -insert EnvironmentVariables.PATH -string "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" "\$BRIDGE_PLIST"
+}
+
+start_bridge_launch_agent() {
+  local domain
+  domain="\$(launchctl_domain)"
+  write_bridge_launch_agent
+  launchctl bootout "\$domain" "\$BRIDGE_PLIST" >/dev/null 2>&1 || true
+  launchctl bootstrap "\$domain" "\$BRIDGE_PLIST" >/dev/null 2>&1 || true
+  launchctl kickstart -k "\$domain/\$BRIDGE_LABEL" >/dev/null 2>&1
+}
+
+stop_bridge_launch_agent() {
+  local domain
+  domain="\$(launchctl_domain)"
+  if [ -f "\$BRIDGE_PLIST" ]; then
+    launchctl bootout "\$domain" "\$BRIDGE_PLIST" >/dev/null 2>&1 || true
+  else
+    launchctl kill TERM "\$domain/\$BRIDGE_LABEL" >/dev/null 2>&1 || true
+  fi
+}
+
+status_bridge_launch_agent() {
+  local domain output pid
+  domain="\$(launchctl_domain)"
+  output="\$(launchctl print "\$domain/\$BRIDGE_LABEL" 2>/dev/null || true)"
+  [ -n "\$output" ] || return 1
+  pid="\$(printf '%s\n' "\$output" | awk -F'= ' '/pid =/{print \$2; exit}')"
+  if [ -n "\$pid" ]; then
+    echo "bridge running with pid \$pid"
+  else
+    echo "bridge loaded via launchctl"
+  fi
+  return 0
+}
+
 start_bridge() {
   load_env
   if [ "\${CUSTOM_CODEX_API_KEY:-}" = "replace-me" ] || [ -z "\${CUSTOM_CODEX_API_KEY:-}" ]; then
@@ -247,6 +311,10 @@ start_bridge() {
     exit 1
   fi
   if pid_running "\$BRIDGE_PID"; then
+    return
+  fi
+  if launchctl_available && start_bridge_launch_agent; then
+    rm -f "\$BRIDGE_PID"
     return
   fi
   mkdir -p "\$CUSTOM_HOME"
@@ -282,9 +350,19 @@ base_url() {
 
 case "\${1:-start}" in
   start) start_bridge ;;
-  stop) stop_pid_file "\$BRIDGE_PID" ;;
+  stop)
+    if launchctl_available; then
+      stop_bridge_launch_agent
+    fi
+    stop_pid_file "\$BRIDGE_PID"
+    ;;
   restart) "\$0" stop; "\$0" start ;;
-  status) status_pid_file "bridge" "\$BRIDGE_PID" ;;
+  status)
+    if launchctl_available && status_bridge_launch_agent; then
+      exit 0
+    fi
+    status_pid_file "bridge" "\$BRIDGE_PID"
+    ;;
   logs) tail -n 120 "\$BRIDGE_LOG" ;;
   test)
     command -v curl >/dev/null 2>&1 || { echo "curl is required for test" >&2; exit 1; }

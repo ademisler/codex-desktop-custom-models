@@ -10,6 +10,7 @@ bundle and a separate `CODEX_HOME`:
 ~/.local/bin/codex-minimax
 ~/.local/bin/codex-minimax-desktop
 ~/.local/bin/codex-minimax-proxy
+~/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist
 ```
 
 It copies `/Applications/Codex.app` into your user Applications folder, patches
@@ -56,11 +57,17 @@ codex-minimax-proxy test
 codex-minimax-desktop
 ```
 
+`codex-minimax-proxy start` runs the bridge as a user LaunchAgent on macOS, so
+it stays alive independently of the terminal that launched it.
+
 ## Remove
 
 ```bash
 codex-minimax-proxy stop
 codex-minimax-proxy automations-stop
+launchctl bootout "gui/$(id -u)" \
+  "$HOME/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist" 2>/dev/null || true
+rm -f "$HOME/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist"
 rm -rf "$HOME/Applications/Codex MiniMax.app"
 rm -f "$HOME/.local/bin/codex-minimax" \
   "$HOME/.local/bin/codex-minimax-desktop" \

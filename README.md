@@ -93,6 +93,7 @@ The installer creates:
 ~/.local/bin/codex-minimax-desktop
 ~/.local/bin/codex-minimax-proxy
 ~/.codex-minimax
+~/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist
 ```
 
 ### 3. Test and Launch
@@ -144,6 +145,9 @@ On macOS:
 
 ```bash
 codex-minimax-proxy stop
+launchctl bootout "gui/$(id -u)" \
+  "$HOME/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist" 2>/dev/null || true
+rm -f "$HOME/Library/LaunchAgents/com.ademisler.codex-minimax.bridge.plist"
 rm -rf "$HOME/Applications/Codex MiniMax.app"
 rm -f "$HOME/.local/bin/codex-minimax" \
   "$HOME/.local/bin/codex-minimax-desktop" \
