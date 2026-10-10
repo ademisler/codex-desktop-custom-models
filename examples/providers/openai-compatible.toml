@@ -1,0 +1,15 @@
+model = "provider-model-id"
+model_provider = "custom_bridge"
+model_context_window = 128000
+model_auto_compact_token_limit = 110000
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model_reasoning_effort = "none"
+
+[model_providers.custom_bridge]
+name = "Custom Responses Bridge"
+base_url = "http://127.0.0.1:4007/v1"
+env_key = "CUSTOM_CODEX_API_KEY"
+wire_api = "responses"
+requires_openai_auth = false
+stream_idle_timeout_ms = 600000

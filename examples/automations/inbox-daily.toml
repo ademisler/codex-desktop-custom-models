@@ -1,0 +1,15 @@
+version = 1
+id = "daily-code-scan"
+kind = "cron"
+destination = "inbox"
+name = "Daily Code Scan"
+prompt = "Scan the repository for obvious regressions, failing tests, and TODO/FIXME comments. Report only actionable findings."
+status = "ACTIVE"
+rrule = "RRULE:FREQ=DAILY;INTERVAL=1;BYHOUR=10;BYMINUTE=0"
+model = "MiniMax-M2.7"
+reasoning_effort = "none"
+execution_environment = "local"
+cwds = ["/path/to/repository"]
+created_at = 0
+updated_at = 0
+runner_managed = true

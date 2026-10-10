@@ -1,0 +1,14 @@
+[Unit]
+Description={{APP_NAME}} provider bridge
+After=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile={{ENV_FILE}}
+ExecStart=/usr/bin/env node {{CODEX_HOME}}/openai-compatible-responses-bridge.mjs
+Restart=on-failure
+RestartSec=3
+WorkingDirectory={{CODEX_HOME}}
+
+[Install]
+WantedBy=default.target

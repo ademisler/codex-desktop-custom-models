@@ -1,0 +1,16 @@
+[Unit]
+Description={{APP_NAME}} automation runner
+After=default.target
+
+[Service]
+Type=simple
+Environment=CODEX_AUTOMATIONS_HOME={{CODEX_HOME}}
+Environment=CODEX_CUSTOM_BIN={{CODEX_BIN}}
+Environment=CODEX_HOME={{CODEX_HOME}}
+ExecStart=/usr/bin/env node {{CODEX_HOME}}/codex-automations-runner.mjs
+Restart=on-failure
+RestartSec=5
+WorkingDirectory={{CODEX_HOME}}
+
+[Install]
+WantedBy=default.target

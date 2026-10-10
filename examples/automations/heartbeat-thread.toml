@@ -1,0 +1,16 @@
+version = 1
+id = "standup-reminder"
+kind = "heartbeat"
+destination = "thread"
+target_thread_id = "replace-with-current-thread-id"
+name = "Standup Reminder"
+prompt = "Every weekday morning, ask for a short standup update in this same Codex chat."
+status = "ACTIVE"
+rrule = "RRULE:FREQ=DAILY;INTERVAL=1;BYHOUR=9;BYMINUTE=0"
+model = "MiniMax-M2.7"
+reasoning_effort = "none"
+execution_environment = "local"
+cwds = []
+created_at = 0
+updated_at = 0
+runner_managed = true

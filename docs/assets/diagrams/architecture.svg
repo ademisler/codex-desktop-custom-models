@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">Codex Desktop Custom Models architecture</title>
+  <desc id="desc">A diagram showing base Codex Desktop, isolated custom app, provider bridge, upstream model, and automation runner.</desc>
+  <rect width="1120" height="560" fill="#101114"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#8b95a7"/>
+    </marker>
+    <style>
+      .box{fill:#1b1d23;stroke:#333846;stroke-width:1.5;rx:12}
+      .hot{fill:#24181a;stroke:#ef4444;stroke-width:1.5;rx:12}
+      .title{fill:#f6f7fb;font:700 20px system-ui,Segoe UI,Arial}
+      .text{fill:#c8ccd6;font:14px system-ui,Segoe UI,Arial}
+      .muted{fill:#8f96a8;font:13px ui-monospace,SFMono-Regular,Consolas,monospace}
+      .line{stroke:#8b95a7;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect x="48" y="70" width="260" height="138" class="box"/>
+  <text x="72" y="112" class="title">Base Codex Linux</text>
+  <text x="72" y="146" class="text">Existing working app</text>
+  <text x="72" y="174" class="muted">start.sh electron content/</text>
+  <text x="72" y="196" class="muted">resources/ chromium files</text>
+
+  <rect x="430" y="56" width="286" height="168" class="hot"/>
+  <text x="456" y="100" class="title">Custom Codex App</text>
+  <text x="456" y="134" class="text">Unique desktop id and icon</text>
+  <text x="456" y="162" class="muted">~/.local/opt/codex-minimax</text>
+  <text x="456" y="184" class="muted">CODEX_HOME=~/.codex-minimax</text>
+
+  <rect x="812" y="70" width="260" height="138" class="box"/>
+  <text x="836" y="112" class="title">Provider Bridge</text>
+  <text x="836" y="146" class="text">Responses API locally</text>
+  <text x="836" y="174" class="muted">127.0.0.1:4007/v1</text>
+  <text x="836" y="196" class="muted">tool namespace mapping</text>
+
+  <rect x="812" y="330" width="260" height="138" class="box"/>
+  <text x="836" y="372" class="title">Upstream Model</text>
+  <text x="836" y="406" class="text">OpenAI-compatible chat API</text>
+  <text x="836" y="434" class="muted">MiniMax M2.7 example</text>
+
+  <rect x="430" y="330" width="286" height="138" class="box"/>
+  <text x="456" y="372" class="title">Automations</text>
+  <text x="456" y="406" class="text">MCP tool plus runner</text>
+  <text x="456" y="434" class="muted">automation_update</text>
+
+  <path d="M308 139 H430" class="line"/>
+  <path d="M716 139 H812" class="line"/>
+  <path d="M942 208 V330" class="line"/>
+  <path d="M812 399 H716" class="line"/>
+  <path d="M573 330 V224" class="line"/>
+</svg>

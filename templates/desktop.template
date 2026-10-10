@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name={{APP_NAME}}
+Comment=Custom isolated Codex Desktop profile
+Exec={{DESKTOP_WRAPPER}} %U
+Icon={{ICON_PATH}}
+Terminal=false
+Categories=Development;Utility;
+StartupNotify=true
+StartupWMClass={{APP_ID}}

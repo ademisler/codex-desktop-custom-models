@@ -1,0 +1,15 @@
+model = "MiniMax-M2.7"
+model_provider = "minimax_bridge"
+model_context_window = 204800
+model_auto_compact_token_limit = 180000
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model_reasoning_effort = "none"
+
+[model_providers.minimax_bridge]
+name = "MiniMax M2.7 Responses Bridge"
+base_url = "http://127.0.0.1:4007/v1"
+env_key = "MINIMAX_API_KEY"
+wire_api = "responses"
+requires_openai_auth = false
+stream_idle_timeout_ms = 600000

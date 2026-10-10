@@ -1,0 +1,23 @@
+model = "{{MODEL}}"
+model_provider = "{{PROVIDER_ID}}"
+model_context_window = {{CONTEXT_WINDOW}}
+model_auto_compact_token_limit = {{AUTO_COMPACT_LIMIT}}
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+model_reasoning_effort = "none"
+
+[model_providers.{{PROVIDER_ID}}]
+name = "{{PROVIDER_NAME}}"
+base_url = "http://127.0.0.1:{{BRIDGE_PORT}}/v1"
+env_key = "{{ENV_KEY}}"
+wire_api = "responses"
+requires_openai_auth = false
+stream_idle_timeout_ms = 600000
+
+[mcp_servers.codex-automations]
+command = "node"
+args = ["{{CODEX_HOME}}/codex-automations-mcp.mjs"]
+enabled = true
+startup_timeout_sec = 10
+default_tools_approval_mode = "approve"
+env = { CODEX_AUTOMATIONS_HOME = "{{CODEX_HOME}}", CODEX_CUSTOM_BIN = "{{CODEX_BIN}}" }

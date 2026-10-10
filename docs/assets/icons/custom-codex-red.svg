@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Custom Codex red icon</title>
+  <rect width="512" height="512" rx="112" fill="#ef4444"/>
+  <circle cx="256" cy="256" r="186" fill="none" stroke="#fff" stroke-width="34" opacity=".95"/>
+  <path d="M330 312h-70c-9 0-16-7-16-16s7-16 16-16h70c9 0 16 7 16 16s-7 16-16 16Z" fill="#fff"/>
+  <path d="M178 316c-3 0-6-1-9-2-8-5-11-15-6-23l24-41-25-44c-4-8-1-18 7-22s18-1 22 7l34 60-34 58c-3 5-8 7-13 7Z" fill="#fff"/>
+  <path d="M150 150c2-42 37-76 80-76 28 0 53 15 67 37 11-6 24-9 38-9 43 0 78 35 78 78 0 13-3 26-9 37 22 14 37 39 37 67 0 43-34 78-76 80-2 42-37 76-80 76-28 0-53-15-67-37-11 6-24 9-38 9-43 0-78-35-78-78 0-13 3-26 9-37-22-14-37-39-37-67 0-43 34-78 76-80Z" fill="none" stroke="#fff" stroke-width="28" stroke-linejoin="round" opacity=".95"/>
+</svg>
